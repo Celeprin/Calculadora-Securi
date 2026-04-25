@@ -1,10 +1,14 @@
 import React from 'react';
-import { History, Building2, Calendar, Pencil, Trash2 } from 'lucide-react';
+import { History, Building2, Calendar, Pencil, Trash2, Search, Download } from 'lucide-react';
 import { CalculationResult } from '../types';
 import { motion } from 'motion/react';
+import { exportToCSV } from '../lib/export';
 
 interface HistoryTabProps {
   history: CalculationResult[];
+  filteredHistory: CalculationResult[];
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
   deleteHistory: (id: string) => void;
   editHistory: (item: CalculationResult) => void;
   formatCurrency: (val: number) => string;
@@ -13,6 +17,9 @@ interface HistoryTabProps {
 
 export const HistoryTab: React.FC<HistoryTabProps> = ({
   history,
+  filteredHistory,
+  searchTerm,
+  setSearchTerm,
   deleteHistory,
   editHistory,
   formatCurrency,
@@ -20,14 +27,37 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
 }) => {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Histórico de Fechamento</h2>
-          <p className="text-sm text-slate-500">Últimos {history.length} cálculos registrados</p>
+          <p className="text-sm text-slate-500">
+            {history.length === 0 
+              ? 'Nenhum cálculo registrado' 
+              : `Mostrando ${filteredHistory.length} de ${history.length} cálculos`}
+          </p>
         </div>
-        <div className="bg-indigo-600 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase shadow-lg shadow-indigo-100 shadow-sm transition-all hover:scale-105 cursor-default">
-          Base 2026-01
-        </div>
+        
+        {history.length > 0 && (
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 md:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text"
+                placeholder="Pesquisar por nome ou data..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+              />
+            </div>
+            <button 
+              onClick={() => exportToCSV(filteredHistory)}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-bold shadow-sm hover:bg-slate-900 transition-all whitespace-nowrap"
+            >
+              <Download className="w-4 h-4" />
+              EXPORTAR CSV
+            </button>
+          </div>
+        )}
       </div>
 
       {history.length === 0 ? (
@@ -44,9 +74,20 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
             Abrir Calculadora
           </button>
         </div>
+      ) : filteredHistory.length === 0 ? (
+        <div className="bg-white p-20 rounded-3xl border border-slate-200 flex flex-col items-center justify-center text-slate-300">
+          <Search className="w-12 h-12 mb-4 opacity-20" />
+          <p className="text-lg font-bold text-slate-400">Nenhum resultado para "{searchTerm}"</p>
+          <button 
+            onClick={() => setSearchTerm('')}
+            className="mt-4 text-indigo-600 font-bold hover:underline"
+          >
+            Limpar Busca
+          </button>
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
-          {history.map((item) => (
+          {filteredHistory.map((item) => (
             <motion.div 
               key={item.id}
               layout

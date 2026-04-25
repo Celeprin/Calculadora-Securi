@@ -27,6 +27,7 @@ export function usePricing() {
   const [estac, setEstac] = useState<boolean>(false);
   const [ativo, setAtivo] = useState<boolean>(true);
   const [diasProRata, setDiasProRata] = useState<number>(0);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Persistence
   useEffect(() => {
@@ -132,6 +133,13 @@ export function usePricing() {
     setHistory(prev => prev.filter(h => h.id !== id));
   };
 
+  const filteredHistory = useMemo(() => {
+    return history.filter(item => 
+      item.nomeCondominio.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.dataCriacao.includes(searchTerm)
+    );
+  }, [history, searchTerm]);
+
   const editHistory = (item: CalculationResult) => {
     setNome(item.nomeCondominio);
     setDataCompetencia(item.dataCriacao);
@@ -170,6 +178,9 @@ export function usePricing() {
     handleSave,
     deleteHistory,
     editHistory,
-    resetToDefaults
+    resetToDefaults,
+    searchTerm,
+    setSearchTerm,
+    filteredHistory
   };
 }

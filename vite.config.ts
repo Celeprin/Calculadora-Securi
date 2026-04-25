@@ -5,6 +5,7 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -18,10 +19,5 @@ export default defineConfig({
     modulePreload: {
       polyfill: false,
     },
-  },
-  server: {
-    port: 3000,
-    host: '0.0.0.0',
-    hmr: process.env.DISABLE_HMR !== 'true',
   },
 });

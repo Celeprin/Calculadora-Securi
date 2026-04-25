@@ -75,6 +75,9 @@ export default function App() {
             >
               <HistoryTab 
                 history={pricing.history}
+                filteredHistory={pricing.filteredHistory}
+                searchTerm={pricing.searchTerm}
+                setSearchTerm={pricing.setSearchTerm}
                 deleteHistory={pricing.deleteHistory}
                 editHistory={handleEditHistory}
                 formatCurrency={formatCurrency}
