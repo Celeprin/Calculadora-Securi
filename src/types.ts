@@ -67,6 +67,6 @@ export const DEFAULT_BASE_PRICES: BasePrices = {
   voipCondoExtra: 1.25,
   estacionamento: 420.00,
   baseCameras: 8,
-  baseUnidades: 0,
+  baseUnidades: 100,
   baseDispositivos: 0,
 };

@@ -16,7 +16,8 @@ import {
   ChevronRight,
   TrendingUp,
   Building2,
-  Calendar
+  Calendar,
+  Pencil
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BasePrices, CalculationResult, DEFAULT_BASE_PRICES } from './types';
@@ -82,8 +83,8 @@ export default function App() {
 
     const totalGrav = gravacao ? basePrices.gravacaoCond * qtdCamAtivas : 0;
     
-    // Total VOIP = MÍNIMO(Total Ramais*preco base VOIP Unidade;preco base VOIP Condo:)
-    const totalVOIP = Math.min(totalRamais * basePrices.voipUnidade, basePrices.voipCondo);
+    // Total VOIP = MİNİMO(Total Ramais * VOIP Condo, VOIP Unidade)
+    const totalVOIP = Math.min(totalRamais * basePrices.voipCondo, basePrices.voipUnidade);
 
     const totalEstac = estac ? basePrices.estacionamento : 0;
 
@@ -151,6 +152,21 @@ export default function App() {
 
   const deleteHistory = (id: string) => {
     setHistory(prev => prev.filter(h => h.id !== id));
+  };
+
+  const editHistory = (item: CalculationResult) => {
+    setNome(item.nomeCondominio);
+    setDataCompetencia(item.dataCriacao);
+    setPrecoCondInput(item.precoCond);
+    setQtdCamAtivas(item.qtdCamAtivas);
+    setUnAtivas(item.unAtivas);
+    setDispAtivos(item.dispAtivos);
+    setGravacao(item.gravacao);
+    setTotalRamais(item.totalRamais);
+    setEstac(item.estacionamento);
+    setAtivo(item.ativo);
+    setDiasProRata(item.diasProRata);
+    setActiveTab('calc');
   };
 
   const formatCurrency = (val: number) => {
@@ -374,54 +390,54 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="p-8 space-y-5">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-widest pb-3 border-b border-slate-100 mb-2">Detalhamento do Cálculo</h3>
+                  <div className="p-8 space-y-4">
+                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-widest pb-1 border-b border-slate-100 mb-2">Detalhamento do Cálculo</h3>
                     
-                    <div className="flex justify-between items-start group">
-                      <div className="text-xs">
-                        <p className="font-bold text-slate-700">Câmeras Extra ({currentResult.camExtras})</p>
-                        <p className="text-slate-400">({currentResult.qtdCamAtivas} Ativ - {currentResult.baseCam} Base) × {formatCurrency(basePrices.cameraExtra)}</p>
+                    <div className="space-y-2.5">
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Preço Cond.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.precoCond)}</span>
                       </div>
-                      <span className="text-xs font-mono font-bold text-slate-800">{formatCurrency(currentResult.precoCam)}</span>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Preço Câm.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.precoCam)}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Preço Un.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.precoUn)}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Preço Disp.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.precoDisp)}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Total Grav.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.totalGrav)}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Total VOIP</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.totalVOIP)}</span>
+                      </div>
+                      <div className="flex justify-between text-[11px] pb-2 border-b border-slate-50">
+                        <span className="text-slate-500 font-semibold uppercase">Total Estac.</span>
+                        <span className="font-mono font-bold text-slate-700">{formatCurrency(currentResult.totalEstac)}</span>
+                      </div>
+
+                      <div className="flex justify-between text-xs font-black text-indigo-700 bg-indigo-50/50 px-3 py-2 rounded-xl mb-4 border border-indigo-100/50">
+                        <span>SUBTOTAL</span>
+                        <span className="font-mono">{formatCurrency(currentResult.totalMensal)}</span>
+                      </div>
+
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500 font-semibold uppercase">Valor Pro-Rata</span>
+                        <span className="font-mono font-bold text-indigo-500">+{formatCurrency(currentResult.valorProRata)}</span>
+                      </div>
+
+                      <div className="flex justify-between text-xs font-black border-t border-slate-100 pt-3 text-slate-900 uppercase tracking-tighter">
+                        <span>Valor Final</span>
+                        <span className="font-mono">{formatCurrency(currentResult.valorFinal)}</span>
+                      </div>
                     </div>
-
-                    <div className="flex justify-between items-start group">
-                      <div className="text-xs">
-                        <p className="font-bold text-slate-700">Unidades Extra ({currentResult.unExtras})</p>
-                        <p className="text-slate-400">Excedente Base × {formatCurrency(basePrices.unidadeExtra)}</p>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-slate-800">{formatCurrency(currentResult.precoUn)}</span>
-                    </div>
-
-                    {currentResult.totalGrav > 0 && (
-                      <div className="flex justify-between items-start">
-                        <div className="text-xs">
-                          <p className="font-bold text-slate-700">Serviço de Gravação</p>
-                          <p className="text-slate-400">{currentResult.qtdCamAtivas} Câms × {formatCurrency(basePrices.gravacaoCond)}</p>
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-800">{formatCurrency(currentResult.totalGrav)}</span>
-                      </div>
-                    )}
-
-                    {currentResult.totalVOIP > 0 && (
-                      <div className="flex justify-between items-start">
-                        <div className="text-xs">
-                          <p className="font-bold text-slate-700">VOIP Condo / Unid.</p>
-                          <p className="text-slate-400">Taxa mínima por ramal</p>
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-800">{formatCurrency(currentResult.totalVOIP)}</span>
-                      </div>
-                    )}
-
-                    {currentResult.totalEstac > 0 && (
-                      <div className="flex justify-between items-start">
-                        <div className="text-xs">
-                          <p className="font-bold text-slate-700">Estacionamento</p>
-                          <p className="text-slate-400">Taxa base fixa mensal</p>
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-800">{formatCurrency(currentResult.totalEstac)}</span>
-                      </div>
-                    )}
                     
                     <div className="pt-6 mt-2">
                        <button 
@@ -491,11 +507,11 @@ export default function App() {
                     { label: 'Disp. Extra', key: 'dispositivoExtra', type: 'currency' },
                     { label: 'Gravação (Câm)', key: 'gravacaoCond', type: 'currency' },
                     { label: 'VOIP Unid.', key: 'voipUnidade', type: 'currency' },
-                    { label: 'VOIP Limite', key: 'voipCondo', type: 'currency' },
+                    { label: 'VOIP Unitário', key: 'voipCondo', type: 'currency' },
                     { label: 'Estacionamento', key: 'estacionamento', type: 'currency' },
-                    { label: 'Qtd Base Câms', key: 'baseCameras', type: 'number' },
-                    { label: 'Qtd Base Unid.', key: 'baseUnidades', type: 'number' },
-                    { label: 'Qtd Base Disp.', key: 'baseDispositivos', type: 'number' },
+                    { label: 'Base Câms', key: 'baseCameras', type: 'number' },
+                    { label: 'Base Un.', key: 'baseUnidades', type: 'number' },
+                    { label: 'Base Disp.', key: 'baseDispositivos', type: 'number' },
                   ].map((field) => (
                     <div key={field.key} className="space-y-1.5">
                       <label className="text-[10px] font-black uppercase text-slate-400 tracking-wider flex justify-between">
@@ -586,17 +602,18 @@ export default function App() {
                           </div>
                           <div className="flex flex-col gap-2">
                             <button 
+                              onClick={() => editHistory(item)}
+                              className="p-2.5 text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                              title="Editar"
+                            >
+                              <Pencil className="w-5 h-5" />
+                            </button>
+                            <button 
                               onClick={() => deleteHistory(item.id)}
                               className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                               title="Excluir"
                             >
                               <Trash2 className="w-5 h-5" />
-                            </button>
-                            <button 
-                              className="p-2.5 text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
-                              title="Exportar"
-                            >
-                              <ChevronRight className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
