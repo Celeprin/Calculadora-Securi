@@ -61,6 +61,7 @@ export default function App() {
                 basePrices={pricing.basePrices}
                 setBasePrices={pricing.setBasePrices}
                 formatCurrency={formatCurrency}
+                resetToDefaults={pricing.resetToDefaults}
               />
             </motion.div>
           )}

@@ -62,7 +62,7 @@ export function usePricing() {
 
     const totalGrav = gravacao ? basePrices.gravacaoCond * qtdCamAtivas : 0;
     
-    const totalVOIP = Math.min(totalRamais * basePrices.voipCondo, basePrices.voipUnidade);
+    const totalVOIP = Math.min(totalRamais * basePrices.voipUnidade, basePrices.voipCondo);
 
     const totalEstac = estac ? basePrices.estacionamento : 0;
 
@@ -146,6 +146,12 @@ export function usePricing() {
     setDiasProRata(item.diasProRata);
   };
 
+  const resetToDefaults = () => {
+    if (confirm('Tem certeza que deseja restaurar os preços padrão? Isso afetará todos os novos cálculos.')) {
+      setBasePrices(DEFAULT_BASE_PRICES);
+    }
+  };
+
   return {
     basePrices, setBasePrices,
     history, setHistory,
@@ -163,6 +169,7 @@ export function usePricing() {
     currentResult,
     handleSave,
     deleteHistory,
-    editHistory
+    editHistory,
+    resetToDefaults
   };
 }

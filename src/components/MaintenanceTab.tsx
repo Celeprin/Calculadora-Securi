@@ -1,44 +1,56 @@
 import React from 'react';
-import { Settings } from 'lucide-react';
+import { Settings, RotateCcw } from 'lucide-react';
 import { BasePrices } from '../types';
 
 interface MaintenanceTabProps {
   basePrices: BasePrices;
   setBasePrices: React.Dispatch<React.SetStateAction<BasePrices>>;
   formatCurrency: (val: number) => string;
+  resetToDefaults: () => void;
 }
 
 export const MaintenanceTab: React.FC<MaintenanceTabProps> = ({
   basePrices,
   setBasePrices,
-  formatCurrency
+  formatCurrency,
+  resetToDefaults
 }) => {
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
-      <aside className="md:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">Taxas Atuais</h2>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-50">
-            <span className="text-xs text-slate-500 font-semibold">Condomínio</span>
-            <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.condominio)}</span>
-          </div>
-          <div className="flex justify-between items-center pb-2 border-b border-slate-50">
-            <span className="text-xs text-slate-500 font-semibold">Câmera Extra</span>
-            <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.cameraExtra)}</span>
-          </div>
-          <div className="flex justify-between items-center pb-2 border-b border-slate-50">
-            <span className="text-xs text-slate-500 font-semibold">Gravação/Câm</span>
-            <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.gravacaoCond)}</span>
-          </div>
-          <div className="flex justify-between items-center pb-2 border-b border-slate-50">
-            <span className="text-xs text-slate-500 font-semibold">VOIP Unid.</span>
-            <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.voipUnidade)}</span>
-          </div>
-          <div className="flex justify-between items-center pt-2">
-            <span className="text-xs text-slate-800 font-black uppercase tracking-tighter">Base Isenta</span>
-            <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-black">{basePrices.baseCameras} CÂMS</span>
+      <aside className="md:col-span-4 space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">Taxas Atuais</h2>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-50">
+              <span className="text-xs text-slate-500 font-semibold">Condomínio</span>
+              <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.condominio)}</span>
+            </div>
+            <div className="flex justify-between items-center pb-2 border-b border-slate-50">
+              <span className="text-xs text-slate-500 font-semibold">Câmera Extra</span>
+              <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.cameraExtra)}</span>
+            </div>
+            <div className="flex justify-between items-center pb-2 border-b border-slate-50">
+              <span className="text-xs text-slate-500 font-semibold">Gravação/Câm</span>
+              <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.gravacaoCond)}</span>
+            </div>
+            <div className="flex justify-between items-center pb-2 border-b border-slate-50">
+              <span className="text-xs text-slate-500 font-semibold">VOIP Unid.</span>
+              <span className="text-sm font-mono font-bold text-slate-700">{formatCurrency(basePrices.voipUnidade)}</span>
+            </div>
+            <div className="flex justify-between items-center pt-2">
+              <span className="text-xs text-slate-800 font-black uppercase tracking-tighter">Base Isenta</span>
+              <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-black">{basePrices.baseCameras} CÂMS</span>
+            </div>
           </div>
         </div>
+
+        <button 
+          onClick={resetToDefaults}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-dashed border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all font-bold text-xs uppercase tracking-widest"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Resetar Padrões
+        </button>
       </aside>
 
       <section className="md:col-span-8 bg-white p-8 rounded-2xl shadow-sm border border-slate-200">

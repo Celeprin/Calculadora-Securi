@@ -59,7 +59,7 @@ export const DEFAULT_BASE_PRICES: BasePrices = {
   condominio: 280.00,
   cameraExtra: 15.00,
   unidadeExtra: 0.50,
-  dispositivoExtra: 20.00,
+  dispositivoExtra: 11.30,
   gravacaoCond: 18.00,
   gravacaoExtra: 0.22,
   voipUnidade: 20.00,
